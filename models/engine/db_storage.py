@@ -74,7 +74,7 @@ class DBStorage:
 
         return None
 
-   def count(self, cls=None):
+    def count(self, cls=None):
         """
         count of how many instances of a class
         :param cls: class name
