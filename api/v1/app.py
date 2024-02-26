@@ -7,8 +7,8 @@ from api.v1.views import app_views
 from os import getenv
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/api/*": {"origins": "0.0.0.0"}})
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
+
 app.register_blueprint(app_views)
 
 
@@ -19,15 +19,16 @@ def teardown(exception):
 
 
 @app.errorhandler(404)
-def page_not_found(exception):
+def handle_404(exception):
     """ Returns a JSON formatted 404 status code response """
-    return jsonify({'error': 'Not found'}), 404
+    data = {
+        'error': 'Not found'
+    }
+
+    resp = jsonify(data)
+    resp.status_code = 404
+
+    return(resp)
 
 if __name__ == "__main__":
-    host = getenv("HBNB_API_HOST")
-    if host is None:
-        host = '0.0.0.0'
-    port = getenv("HBNB_API_PORT")
-    if port is None:
-        port = '5000'
-    app.run(host=host, port=port, threaded=True)
+    app.run(getenv("HBNB_API_HOST"), getenv("HBNB_API_PORT"))
